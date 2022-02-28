@@ -27,17 +27,21 @@ const register = async (req, res) => {
   const { email, name, password } = req.body;
 
   const existingEmail = (await User.findOne({ email })) === 0;
-  const isFirstAccount = await User.countDocuments({});
-  const role = isFirstAccount ? 'admin' : 'user';
   if (existingEmail) {
     throw new CustomError.BadRequestError('Email is already exists');
   }
+
+
+   // first registered user is an admin
+   const isFirstAccount = (await User.countDocuments({})) === 0;
+   const role = isFirstAccount ? 'admin' : 'user';
+
 
   const user = await User.create({ email, name, password, role });
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
   attachCookiesToResponse({ res, user: tokenUser });
 
-  res.status(StatusCodes.CREATED).json({user:tokenUser});
+  
 };
 
 const logout = async(req, res) => {
