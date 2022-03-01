@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))
 
 app.get('/', (req,res)=> {
-    console.log(req.signedCookies)
+    // console.log(req.signedCookies)
     res.send('e-commerce-api ')
 })
 
